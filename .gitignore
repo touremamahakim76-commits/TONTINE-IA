@@ -1,0 +1,13 @@
+node_modules/
+*.log
+.env
+.DS_Store
+backend/data/*.db
+backend/data/*.db-*
+ai-service/models/*.joblib
+ai-service/__pycache__/
+**/__pycache__/
+*.pyc
+frontend/dist/
+.vscode/
+.idea/
