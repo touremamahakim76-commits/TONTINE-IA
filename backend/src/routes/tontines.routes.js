@@ -107,13 +107,31 @@ router.post('/:id/invite', authRequired, (req, res) => {
   const invited = db.prepare('SELECT id, full_name FROM users WHERE LOWER(email) = LOWER(?)').get(email);
   if (!invited) return res.status(404).json({ error: 'Utilisateur non trouvé' });
 
-  const exists = db
-    .prepare('SELECT id FROM memberships WHERE user_id = ? AND tontine_id = ?')
+  const existing = db
+    .prepare('SELECT * FROM memberships WHERE user_id = ? AND tontine_id = ?')
     .get(invited.id, req.params.id);
-  if (exists) return res.status(409).json({ error: 'Déjà invité ou membre' });
 
+  if (existing) {
+    // Permet de ré-inviter un membre qui avait décliné
+    if (existing.status === 'declined') {
+      db.prepare("UPDATE memberships SET status = 'invited', joined_at = NULL WHERE id = ?")
+        .run(existing.id);
+      notify({
+        userId: invited.id,
+        type: 'tontine_invitation',
+        title: 'Invitation à rejoindre une tontine',
+        body: `Vous êtes invité(e) à rejoindre la tontine « ${tontine.name} ».`,
+        data: { tontineId: req.params.id },
+      });
+      logAction({ userId: req.user.id, action: 'reinvite_member', entityType: 'tontine', entityId: req.params.id, req, payload: { invitedUserId: invited.id } });
+      return res.status(201).json({ ok: true, invitedUser: invited });
+    }
+    return res.status(409).json({ error: 'Déjà invité ou membre' });
+  }
+
+  // Compte uniquement les membres non-déclinés pour savoir si la tontine est pleine
   const count = db
-    .prepare("SELECT COUNT(*) AS n FROM memberships WHERE tontine_id = ?")
+    .prepare("SELECT COUNT(*) AS n FROM memberships WHERE tontine_id = ? AND status != 'declined'")
     .get(req.params.id).n;
   const position = count + 1;
   if (position > tontine.members_target)

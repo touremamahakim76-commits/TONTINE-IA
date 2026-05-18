@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/me', authRequired, (req, res) => {
   const tontinesCount = db
     .prepare(
-      `SELECT COUNT(*) AS n FROM tontines t
+      `SELECT COUNT(DISTINCT t.id) AS n FROM tontines t
        LEFT JOIN memberships m ON m.tontine_id = t.id
        WHERE t.owner_id = ? OR (m.user_id = ? AND m.status = 'accepted')`
     )

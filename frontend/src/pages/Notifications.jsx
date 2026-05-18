@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api/client';
 import { formatDate } from '../utils/format';
+import { Info } from 'lucide-react';
 
 export default function Notifications() {
   const [list, setList] = useState([]);
@@ -40,6 +41,15 @@ export default function Notifications() {
           <p className="text-slate-500 mt-1">Vos dernières notifications.</p>
         </div>
         <button onClick={markAll} className="btn-outline">Tout marquer comme lu</button>
+      </div>
+
+      {/* Instructions */}
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-100 text-sm text-emerald-800">
+        <Info size={17} className="shrink-0 mt-0.5 text-emerald-500" />
+        <div>
+          <span className="font-semibold">Vos notifications :</span> Vous recevez des alertes pour les invitations à rejoindre une tontine, les cotisations à venir, et les activités importantes.
+          Acceptez ou refusez les invitations directement depuis cette page.
+        </div>
       </div>
 
       <div className="card divide-y divide-slate-100">

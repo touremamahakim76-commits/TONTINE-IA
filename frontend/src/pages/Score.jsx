@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../api/client';
 import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 import { formatDate } from '../utils/format';
+import { Info } from 'lucide-react';
 
 export default function Score() {
   const [data, setData] = useState(null);
@@ -18,6 +19,15 @@ export default function Score() {
       <div>
         <h1 className="text-3xl font-bold">Mon score de fiabilité</h1>
         <p className="text-slate-500 mt-1">Score calculé par notre IA sur la base de votre comportement.</p>
+      </div>
+
+      {/* Instructions */}
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-violet-50 border border-violet-100 text-sm text-violet-800">
+        <Info size={17} className="shrink-0 mt-0.5 text-violet-500" />
+        <div>
+          <span className="font-semibold">Comment améliorer votre score ?</span> Payez vos cotisations à temps, participez activement aux tontines et évitez les litiges.
+          Un score supérieur à 70 vous donne accès aux meilleures tontines et renforce la confiance des autres membres envers vous.
+        </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">

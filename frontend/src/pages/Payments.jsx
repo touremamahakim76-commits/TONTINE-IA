@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import { formatMoney, formatDate, statusLabel, statusColor } from '../utils/format';
-import { CreditCard } from 'lucide-react';
+import { CreditCard, Info } from 'lucide-react';
 
 export default function Payments() {
   const [list, setList] = useState([]);
@@ -32,6 +32,15 @@ export default function Payments() {
         <p className="text-slate-500 mt-1">Gérez vos cotisations en attente et consultez votre historique.</p>
       </div>
 
+      {/* Instructions */}
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-100 text-sm text-amber-800">
+        <Info size={17} className="shrink-0 mt-0.5 text-amber-500" />
+        <div>
+          <span className="font-semibold">Important :</span> Payez vos cotisations avant la date d'échéance pour maintenir un bon score de fiabilité.
+          Un retard ou un manquement impacte négativement votre score et peut vous empêcher de rejoindre de nouvelles tontines.
+        </div>
+      </div>
+
       <div className="card p-5">
         <div className="font-semibold mb-3">À payer</div>
         {pending.length === 0 ? (
@@ -39,16 +48,17 @@ export default function Payments() {
         ) : (
           <ul className="divide-y divide-slate-100">
             {pending.map((c) => (
-              <li key={c.id} className="py-3 flex items-center justify-between">
-                <div>
-                  <div className="font-medium">{c.tontine_name} — Cycle {c.cycle_index}</div>
-                  <div className="text-sm text-slate-500">échéance : {formatDate(c.due_date)}</div>
+              <li key={c.id} className="py-3 space-y-2">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="font-medium">{c.tontine_name} — Cycle {c.cycle_index}</div>
+                    <div className="text-sm text-slate-500">échéance : {formatDate(c.due_date)}</div>
+                  </div>
+                  <span className="font-semibold shrink-0">{formatMoney(c.amount, c.currency)}</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-semibold">{formatMoney(c.amount, c.currency)}</span>
+                <div className="flex items-center justify-between gap-2">
                   <span className={`badge ${statusColor[c.status]}`}>{statusLabel[c.status]}</span>
-                  <button onClick={() => pay(c.id)} disabled={paying === c.id}
-                    className="btn-primary text-sm">
+                  <button onClick={() => pay(c.id)} disabled={paying === c.id} className="btn-primary text-sm">
                     <CreditCard size={14} className="mr-1" />
                     {paying === c.id ? 'Paiement…' : 'Payer'}
                   </button>
@@ -64,7 +74,8 @@ export default function Payments() {
         {history.length === 0 ? (
           <div className="text-slate-400 text-sm">Aucune cotisation payée.</div>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[480px]">
             <thead className="text-left text-slate-500">
               <tr>
                 <th className="py-2">Tontine</th>
@@ -86,6 +97,7 @@ export default function Payments() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

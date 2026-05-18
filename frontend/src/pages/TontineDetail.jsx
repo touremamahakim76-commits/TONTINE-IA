@@ -22,7 +22,7 @@ export default function TontineDetail() {
   const myMembership = t.members.find((m) => m.user_id === user.id);
   const acceptedCount = t.members.filter((m) => m.status === 'accepted').length;
   const pendingMembers = t.members.filter((m) => m.status === 'invited');
-  const canStart = isOwner && t.status === 'pending' && acceptedCount === t.members_target;
+  const canStart = isOwner && t.status === 'pending' && acceptedCount >= t.members_target;
 
   const showMsg = (text, type = 'error') => { setMsg(text); setMsgType(type); };
 
@@ -46,7 +46,7 @@ export default function TontineDetail() {
       load();
     } catch (e) {
       const errMsg = e.response?.data?.error || 'Erreur';
-      if (errMsg === 'Déjà répondu') {
+      if (errMsg.includes('Invitation déjà traitée') || errMsg === 'Déjà répondu') {
         showMsg('Vous avez déjà répondu à cette invitation. Rechargez la page.');
       } else {
         showMsg(errMsg);
@@ -147,7 +147,7 @@ export default function TontineDetail() {
 
           {isOwner && t.status === 'pending' && acceptedCount < t.members_target && (
             <div className="mt-4 space-y-2">
-              {t.members.length < t.members_target && (
+              {t.members.filter(m => m.status !== 'declined').length < t.members_target && (
                 <div className="flex gap-2">
                   <input
                     className="input"

@@ -75,12 +75,51 @@ export default function Dashboard() {
 
   const monthly = data.monthly_history.map((m) => ({ month: m.month, total: m.total / 100 }));
 
+  const steps = [
+    { label: 'Compte créé', done: true },
+    { label: 'Rejoindre ou créer une tontine', done: data.tontines_count > 0 },
+    { label: 'Effectuer une cotisation', done: data.total_saved > 0 },
+    { label: 'Score de fiabilité ≥ 50', done: (data.trust_score ?? 0) >= 50 },
+  ];
+  const doneCount = steps.filter(s => s.done).length;
+  const progressPct = Math.round((doneCount / steps.length) * 100);
+
   return (
     <div className="space-y-8">
       <div className="page-header">
         <h1 className="page-title">Tableau de bord</h1>
         <p className="page-subtitle">Bienvenue — voici votre activité en un coup d'œil.</p>
       </div>
+
+      {/* Guide de démarrage */}
+      {doneCount < steps.length && (
+        <div className="card p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="font-semibold text-slate-800">Guide de démarrage</p>
+              <p className="text-xs text-slate-400 mt-0.5">{doneCount} / {steps.length} étapes complétées</p>
+            </div>
+            <span className="text-sm font-bold text-primary-600">{progressPct} %</span>
+          </div>
+          {/* Barre de progression */}
+          <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-4">
+            <div
+              className="h-full bg-gradient-to-r from-primary-500 to-primary-600 rounded-full transition-all duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+          <ul className="space-y-2">
+            {steps.map((s, i) => (
+              <li key={i} className="flex items-center gap-2.5 text-sm">
+                <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${s.done ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                  {s.done ? '✓' : i + 1}
+                </span>
+                <span className={s.done ? 'text-slate-400 line-through' : 'text-slate-700'}>{s.label}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

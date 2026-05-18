@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/client';
 import { formatDate } from '../utils/format';
+import { Info } from 'lucide-react';
 
 export default function Disputes() {
   const [list, setList] = useState([]);
@@ -28,6 +29,16 @@ export default function Disputes() {
       <div>
         <h1 className="text-3xl font-bold">Litiges</h1>
         <p className="text-slate-500 mt-1">Signalez un problème ou suivez vos litiges en cours.</p>
+      </div>
+
+      {/* Instructions */}
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-rose-50 border border-rose-100 text-sm text-rose-800">
+        <Info size={17} className="shrink-0 mt-1 text-rose-500" />
+        <div className="space-y-1">
+          <p><span className="font-semibold">Quand ouvrir un litige ?</span> Uniquement en cas de problème sérieux : paiement non reçu, comportement frauduleux, ou membre qui ne cotise plus.</p>
+          <p><span className="font-semibold">Comment ça fonctionne ?</span> Sélectionnez la tontine concernée, décrivez le problème clairement. Un administrateur examinera votre signalement.</p>
+          <p><span className="font-semibold">Important :</span> Les litiges non fondés peuvent affecter votre propre score de fiabilité. Utilisez cette fonctionnalité de manière responsable.</p>
+        </div>
       </div>
 
       <form onSubmit={submit} className="card p-5 space-y-3">

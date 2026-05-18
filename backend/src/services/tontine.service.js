@@ -14,8 +14,8 @@ function generateCycles(tontineId) {
     )
     .all(tontineId);
 
-  if (memberships.length !== tontine.members_target) {
-    throw new Error('Le nombre de membres ne correspond pas à la cible.');
+  if (memberships.length < tontine.members_target) {
+    throw new Error(`Il faut ${tontine.members_target} membres acceptés pour démarrer (actuellement ${memberships.length}).`);
   }
 
   const totalAmount = tontine.amount * memberships.length;

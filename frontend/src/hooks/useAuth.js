@@ -15,6 +15,19 @@ export const useAuth = create((set, get) => ({
       localStorage.removeItem('td_token');
       set({ user: null, loading: false });
     }
+
+    // Resynchronise le state si le token change dans un autre onglet
+    window.addEventListener('storage', (e) => {
+      if (e.key !== 'td_token') return;
+      if (!e.newValue) {
+        set({ user: null });
+      } else if (e.newValue !== e.oldValue) {
+        api.get('/auth/me').then(({ data }) => set({ user: data })).catch(() => {
+          localStorage.removeItem('td_token');
+          set({ user: null });
+        });
+      }
+    });
   },
 
   login: async (email, password, otp) => {

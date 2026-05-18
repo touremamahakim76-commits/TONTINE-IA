@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../api/client';
 import { formatMoney } from '../utils/format';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, PieChart, Pie, Cell } from 'recharts';
-import { Brain, Target, Users, Shield, AlertTriangle, TrendingDown, ChevronDown, ChevronUp } from 'lucide-react';
+import { Brain, Target, Users, Shield, AlertTriangle, TrendingDown, ChevronDown, ChevronUp, Info } from 'lucide-react';
 
 export default function MLInsights() {
   const [models, setModels] = useState(null);
@@ -36,6 +36,18 @@ export default function MLInsights() {
         <div>
           <h1 className="text-3xl font-bold">Intelligence Artificielle</h1>
           <p className="text-slate-500 mt-1">6 modèles ML au service de votre expérience.</p>
+        </div>
+      </div>
+
+      {/* Instructions */}
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-indigo-50 border border-indigo-100 text-sm text-indigo-800">
+        <Info size={17} className="shrink-0 mt-1 text-indigo-500" />
+        <div className="space-y-1">
+          <p><span className="font-semibold">À quoi sert cette page ?</span> L'IA analyse votre comportement financier pour vous donner des informations personnalisées.</p>
+          <p><span className="font-semibold">Risque de défaut :</span> Probabilité que vous manquiez votre prochaine cotisation. Plus il est bas, mieux c'est.</p>
+          <p><span className="font-semibold">Archétype :</span> Votre profil d'épargnant parmi 5 catégories — avec des conseils adaptés à votre situation.</p>
+          <p><span className="font-semibold">Membres compatibles :</span> L'IA recommande des personnes fiables avec qui former une tontine, basé sur la compatibilité de profil.</p>
+          <p><span className="font-semibold">Prévision :</span> Sélectionnez une tontine pour voir combien de cotisations sont attendues sur les prochains cycles.</p>
         </div>
       </div>
 
